@@ -11,10 +11,13 @@ import java.util.Date;
 public class Parkir {
     @Id
     private String id;
+    private String serial;
     private String kodeGerbang;
     private String kodeGate;
     private String noKendaraan;
     private Date tanggalTransaksi;
     private Date tanggalCreated;
+    private Date tanggalExpired;
+    private String summary;
     private boolean status;
 }
