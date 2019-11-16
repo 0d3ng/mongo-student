@@ -26,8 +26,8 @@ public class ParkirSeviceImpl implements ParkirService {
     }
 
     @Override
-    public String save(Parkir parkir) {
-        return repository.save(parkir).getId();
+    public Parkir save(Parkir parkir) {
+        return repository.save(parkir);
     }
 
     @Override

@@ -19,12 +19,11 @@ public class ParkirServiceTests {
     void saveTest() {
         Parkir parkir = new Parkir();
         parkir.setKodeGate("0101");
-        parkir.setKodeGerbang("01");
         parkir.setNoKendaraan("AB 2039 YQ");
         parkir.setStatus(true);
         parkir.setTanggalCreated(new Date());
         parkir.setTanggalTransaksi(new Date());
-        String save = service.save(parkir);
+        Parkir save = service.save(parkir);
     }
 
     @Test

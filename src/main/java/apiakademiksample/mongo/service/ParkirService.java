@@ -9,7 +9,7 @@ public interface ParkirService {
 
     Parkir getById(String id) throws Exception;
 
-    String save(Parkir parkir);
+    Parkir save(Parkir parkir);
 
     void delete(String id);
 }

@@ -1,5 +1,8 @@
 package apiakademiksample.mongo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.media.sound.ModelMappedInstrument;
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +33,16 @@ public class MongoApplication {
 
         return mongoTemplate;
 
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 
 

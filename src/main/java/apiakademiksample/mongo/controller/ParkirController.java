@@ -1,14 +1,22 @@
 package apiakademiksample.mongo.controller;
 
+import apiakademiksample.mongo.dto.ParkirDto;
 import apiakademiksample.mongo.entitas.Parkir;
 import apiakademiksample.mongo.service.ParkirService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -16,24 +24,51 @@ import org.springframework.web.bind.annotation.*;
 public class ParkirController {
     @Autowired
     private ParkirService parkirService;
+    private ModelMapper modelMapper;
+
+    @Autowired
+    public ParkirController(ModelMapper modelMapper) {
+        this.modelMapper = modelMapper;
+        this.modelMapper.addMappings(skipModifiedFieldsMap);
+    }
+
+    private PropertyMap<Parkir, ParkirDto> skipModifiedFieldsMap = new PropertyMap<Parkir, ParkirDto>() {
+        protected void configure() {
+            skip().setTanggalCreated(null);
+        }
+    };
 
     @PostMapping("/parkirs")
     @ResponseStatus(HttpStatus.CREATED)
-    public Parkir simpan(@RequestBody Parkir parkir) {
-        parkir.setId(parkirService.save(parkir));
+    public ParkirDto simpan(@RequestBody ParkirDto parkir) {
+        Parkir parkir1 = modelMapper.map(parkir, Parkir.class);
+        parkir1.setTanggalCreated(new Date());
+        Parkir save = parkirService.save(parkir1);
+        parkir.setId(save.getId());
+        parkir.setTanggalCreated(save.getTanggalCreated());
         return parkir;
     }
 
     @GetMapping("/parkirs")
-    public Page<Parkir> getAll(Pageable pageable) {
-        return parkirService.getAll(pageable);
+    public Page<ParkirDto> getAll(Pageable pageable) {
+        Page<Parkir> all = parkirService.getAll(pageable);
+        List<Parkir> content = all.getContent();
+        List<ParkirDto> parkirDtos = new ArrayList<>();
+        for (Parkir parkir : content) {
+            ParkirDto dto = modelMapper.map(parkir, ParkirDto.class);
+            dto.setTanggalCreated(parkir.getTanggalCreated());
+            parkirDtos.add(dto);
+        }
+        return new PageImpl<>(parkirDtos, pageable, all.getTotalElements());
     }
 
     @GetMapping("/parkirs/{id}")
-    public Parkir getById(@PathVariable("id") String id) {
+    public ParkirDto getById(@PathVariable("id") String id) {
         try {
             Parkir parkir = parkirService.getById(id);
-            return parkir;
+            ParkirDto dto = modelMapper.map(parkir,ParkirDto.class);
+            dto.setTanggalCreated(parkir.getTanggalCreated());
+            return dto;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
