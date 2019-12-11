@@ -1,0 +1,16 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_DATABASE=parkir-db
+    volumes:
+      - /opt/mongo-data:/data/db
+  aplikasi:
+    image: 0d3ng/springboot-mongo
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - mongo
+    ports:
+      - 8080:8080
