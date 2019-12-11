@@ -1,9 +1,8 @@
 version: "3.1"
 services:
-  mongo:
-    restart: always
+  mongodb:
     image: mongo:latest
-    container_name: springboot-mongo
+    container_name: db-parkir-mongo
     volumes:
       - /opt/mongo-data:/data/db
     ports:
@@ -11,12 +10,9 @@ services:
 
 
   aplikasi:
-    build: .
-    restart: always
-    container_name: springboot
-    image: 0d3ng/springboot-mongo
+    container_name: aplikasi-parkir
+    image: 0d3ng/springboot-mongo:1.0.0
     depends_on:
-      - mongo
+      - mongodb
     ports:
       - 8080:8080
-    working_dir: /opt/app
