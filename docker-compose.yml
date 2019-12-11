@@ -4,14 +4,11 @@ services:
     image: mongo:latest
     container_name: "mongodb"
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=parkir
       - MONGO_INITDB_DATABASE=parkir-db
     volumes:
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
       - /opt/mongo-data:/data/db
     ports:
-      - '27017-27019:27017-27019'
+      - 27017:27017
   aplikasi:
     image: 0d3ng/springboot-mongo
     environment:
