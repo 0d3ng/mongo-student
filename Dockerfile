@@ -1,8 +1,12 @@
 FROM openjdk:8-alpine
 
-ADD target/mongo-0.0.1-SNAPSHOT.jar /opt/mongo.jar
+RUN apk update && apk add bash
 
-RUN bash -c 'touch /opt/mongo.jar'
+RUN mkdir -p /opt/app
+ENV PROJECT_HOME /opt/app
 
-ENTRYPOINT ["java","-Dspring.data.mongodb.uri=mongodb://springboot-mongo:27017/springmongo-demo",
-"-Djava.security.egd=file:/dev/./urandom","-jar","/opt/mongo.jar"]
+COPY target/mongo-0.0.1-SNAPSHOT.jar $PROJECT_HOME/mongo.jar
+
+WORKDIR $PROJECT_HOME
+
+CMD ["java","-Dspring.data.mongodb.uri=mongodb://springboot-mongo:27017/springmongo-demo","-Djava.security.egd=file:/dev/./urandom","-jar","./mongo.jar"]
