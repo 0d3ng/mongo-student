@@ -1,16 +1,21 @@
-version: "3"
+version: "3.1"
 services:
-  mongodb:
+  mongo:
+    restart: always
     image: mongo:latest
-    container_name: "mongodb"
+    container_name: springboot-mongo
     volumes:
       - /opt/mongo-data:/data/db
     ports:
       - 27017:27017
-    command: --smallfiles
+
+
   aplikasi:
+    build: .
+    restart: always
+    container_name: springboot
     image: 0d3ng/springboot-mongo
-    links:
-      - mongodb
+    depends_on:
+      - mongo
     ports:
       - 8080:8080
